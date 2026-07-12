@@ -1,0 +1,73 @@
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define SIZE 100003
+
+typedef struct Node {
+    int key;
+    struct Node *next;
+} Node;
+
+Node *table[SIZE];
+
+void clearTable() {
+    for (int i = 0; i < SIZE; i++) {
+        Node *cur = table[i];
+        while (cur) {
+            Node *temp = cur;
+            cur = cur->next;
+            free(temp);
+        }
+        table[i] = NULL;
+    }
+}
+
+int hash(int key) {
+    return (key & 0x7fffffff) % SIZE;
+}
+
+void insert(int key) {
+    int h = hash(key);
+    Node *node = (Node *)malloc(sizeof(Node));
+    node->key = key;
+    node->next = table[h];
+    table[h] = node;
+}
+
+bool search(int key) {
+    int h = hash(key);
+    Node *cur = table[h];
+    while (cur) {
+        if (cur->key == key)
+            return true;
+        cur = cur->next;
+    }
+    return false;
+}
+
+int findMaximumXOR(int* nums, int numsSize) {
+    int max = 0;
+    int mask = 0;
+
+    for (int i = 31; i >= 0; i--) {
+
+        clearTable();
+
+        mask |= (1 << i);
+
+        for (int j = 0; j < numsSize; j++) {
+            insert(nums[j] & mask);
+        }
+
+        int temp = max | (1 << i);
+
+        for (int j = 0; j < numsSize; j++) {
+            if (search((nums[j] & mask) ^ temp)) {
+                max = temp;
+                break;
+            }
+        }
+    }
+
+    return max;
+}
