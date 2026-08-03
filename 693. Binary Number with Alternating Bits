@@ -1,0 +1,29 @@
+class Solution {
+    public static String dectoBinary(int num){
+        if(num==0){
+            return "0";
+        }
+        StringBuilder binary=new StringBuilder();
+        while(num>0){
+            int rem=num%2;
+            binary.append(rem);
+            num=num/2;
+        }
+        return binary.reverse().toString();
+    }
+    public static boolean hasAlternatingBits(int n) {
+        String binarystr = dectoBinary(n);
+        for(int i=0;i<binarystr.length()-1;i++){
+            if(binarystr.charAt(i)==binarystr.charAt(i+1)){
+                return false;
+            }
+        }
+        return true;
+    }
+    public static void main(String[] args){
+        Scanner in=new Scanner(System.in);
+        int n=in.nextInt();
+        boolean res=hasAlternatingBits(n);
+        System.out.println(n);
+    }
+}
