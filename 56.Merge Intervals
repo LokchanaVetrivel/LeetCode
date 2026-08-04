@@ -1,0 +1,21 @@
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if(intervals.length<=1){
+            return intervals;
+        }
+        Arrays.sort(intervals,(a,b) -> Integer.compare(a[0],b[0]));
+        List<int[]> mergeList=new ArrayList<>();
+        int[] currentPair=intervals[0];
+        mergeList.add(currentPair);
+        for(int i=1;i<intervals.length;i++){
+            int[] nextPair=intervals[i];
+            if(nextPair[0]<=currentPair[1]){
+                currentPair[1]=Math.max(currentPair[1],nextPair[1]);
+            }else{
+                currentPair=nextPair;
+                mergeList.add(currentPair);
+            }
+        }
+        return mergeList.toArray(new int[mergeList.size()][]);
+    }
+}
