@@ -1,0 +1,49 @@
+import java.util.Arrays;
+
+public class Solution {
+    public int triangleNumber(int[] nums) {
+        // Step 1: Return 0 immediately if we don't have at least 3 sides
+        if (nums == null || nums.length < 3) {
+            return 0;
+        }
+        
+        int count = 0;
+        int n = nums.length;
+        
+        // Step 2: Sort the array to easily check the triangle inequality theorem
+        Arrays.sort(nums);
+        
+        // Step 3: Iterate backwards, treating nums[i] as the longest side (c)
+        // We stop at i = 2 because we need at least two elements before it (indices 0 and 1)
+        for (int i = n - 1; i >= 2; i--) {
+            int left = 0;       // Shortest side pointer (a)
+            int right = i - 1;  // Medium side pointer (b)
+            
+            // Step 4: Use two pointers to find valid pairs
+            while (left < right) {
+                // If a + b > c, then all elements from 'left' to 'right' 
+                // combined with 'right' will also be greater than 'c'
+                if (nums[left] + nums[right] > nums[i]) {
+                    count += (right - left); 
+                    right--; // Shrink the window from the right to try smaller values
+                } else {
+                    left++;  // The sum is too small, increase the shorter side
+                }
+            }
+        }
+        
+        return count;
+    }
+
+    // Main method to test the solution and prevent array boundary crashes
+    public static void main(String[] args) {
+        Solution solver = new Solution();
+        
+        // Example array with length 4 (similar to your error scenario)
+        int[] testCase = {2, 2, 3, 4};
+        
+        int result = solver.triangleNumber(testCase);
+        System.out.println("Valid Triangle Count: " + result); 
+        // Expected Output: 3 (Triplets: [2,2,3], [2,3,4], [2,3,4])
+    }
+}
