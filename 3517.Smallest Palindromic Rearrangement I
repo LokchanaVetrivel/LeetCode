@@ -1,0 +1,45 @@
+import java.util.Arrays;
+public class Solution { // Changed the class name to Solution to match the driver code
+    public String smallestPalindrome(String s) {
+        // 1. Convert string to character array and sort it alphabetically
+        char[] arr = s.toCharArray();
+        Arrays.sort(arr);
+        String newS = new String(arr);
+        int len = newS.length();
+        // 2. Count the frequencies of each character
+        int[] count = new int[26];
+        for (int i = 0; i < len; i++) {
+            char c = newS.charAt(i);
+            count[c - 'a']++;
+        }
+        // 3. Track how many characters have an odd frequency
+        int oddCount = 0;
+        char centerChar = ' ';
+        for (int i = 0; i < 26; i++) {
+            if (count[i] % 2 != 0) {
+                oddCount++;
+                centerChar = (char) (i + 'a'); // Save the odd character for the middle slot
+            }
+        }
+        // 4. If more than 1 character is odd, a palindrome is impossible
+        if (oddCount > 1) {
+            return "Impossible"; 
+        }
+        // 5. Build the lexicographically smallest first half
+        StringBuilder firstHalf = new StringBuilder();
+        for (int i = 0; i < 26; i++) {
+            int half = count[i] / 2; // Take half of the characters for the left side
+            for (int j = 0; j < half; j++) {
+                firstHalf.append((char) (i + 'a'));
+            }
+        }
+        // 6. Mirror the first half to create the second half
+        String secondHalf = new StringBuilder(firstHalf).reverse().toString();
+        // 7. Combine the parts together and return the final palindrome
+        if (oddCount == 1) {
+            return firstHalf.toString() + centerChar + secondHalf;
+        } else {
+            return firstHalf.toString() + secondHalf;
+        }
+    }
+}
