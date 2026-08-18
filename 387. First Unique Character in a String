@@ -1,0 +1,23 @@
+import java.util.LinkedList;
+import java.util.Queue;
+class Solution {
+    public int firstUniqChar(String s) {
+        int[] letterCounts = new int[26];
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            letterCounts[c - 'a']++;
+            queue.add(i);
+        }
+        while (!queue.isEmpty()) {
+            int index = queue.peek();
+            char c = s.charAt(index);
+            if (letterCounts[c - 'a'] > 1) {
+                queue.poll(); 
+            } else {
+                return index;
+            }
+        }
+        return -1;
+    }
+}
